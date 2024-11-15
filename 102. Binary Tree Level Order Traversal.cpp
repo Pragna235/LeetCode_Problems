@@ -6,48 +6,29 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
- * right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
 class Solution {
 public:
     vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>> result;
-        if (root == NULL) {
-            return result;
-        }
-        vector<int> level;
-        unordered_map<TreeNode*, int> mp;
-        mp[root] = 1;
+        vector<vector<int>> ans;
+        if(!root) return ans;
         queue<TreeNode*> q;
         q.push(root);
-        level.push_back(root->val);
-        while (!q.empty()) {
-            TreeNode* ptr = q.front();
-            q.pop();
-            if (mp.find(ptr) != mp.end()) {
-                result.push_back(level);
-                level.clear();
+        while(!q.empty()){
+            int n = q.size();
+            vector<int> level;
+            for(int i=0;i<n;i++){
+                TreeNode* node = q.front();
+                q.pop();
+                
+                if(node->left) q.push(node->left);
+                if(node->right) q.push(node->right);
+                level.push_back(node->val);
             }
-            if (ptr->left) {
-                if (level.empty()) {
-                    mp[ptr->left] = 1;
-                }
-                level.push_back(ptr->left->val);
-                q.push(ptr->left);
-            }
-            if (ptr->right) {
-                if (level.empty()) {
-                    mp[ptr->right] = 1;
-                }
-                level.push_back(ptr->right->val);
-                q.push(ptr->right);
-            }
+            ans.push_back(level);
         }
-        for (auto& i : level) {
-            cout << i << endl;
-        }
-        return result;
+        return ans;
     }
 };
